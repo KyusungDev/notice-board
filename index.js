@@ -1,16 +1,23 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+require('dotenv').config();
+
+const redis = require('redis').createClient(process.env.REDIS_URL);
+
+console.log(process.env.REDIS_URL);
+
+redis.set('my string', 'this is a string', redis.print);
+redis.get('my string', function(err, result) {
+  console.log(result); // this is a string
+});
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 // Put all API endpoints under '/api'
 app.get('/api/passwords', (req, res) => {
-  // Return them as json
   res.json('Hello');
-
-  console.log(`Sent ${count} passwords`);
 });
 
 // The "catchall" handler: for any request that doesn't

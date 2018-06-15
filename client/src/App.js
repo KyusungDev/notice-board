@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './App.css';
 
 class App extends Component {
   // Initialize state
@@ -15,12 +14,13 @@ class App extends Component {
     fetch('/api/passwords')
       .then(res => res.json())
       .then(passwords => this.setState({ passwords }));
+
+    // this.setState({ passwords: 'Addy' });
   };
 
   render() {
     const { passwords } = this.state;
-
-    return <div>{password}</div>;
+    return <div>Hello {passwords}</div>;
   }
 }
 
