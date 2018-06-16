@@ -1,24 +1,50 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+import renderHTML from 'react-render-html';
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch
+} from 'react-router-dom';
+import { Provider } from 'react-redux';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Header from './Components/Header';
+import PostListContainer from './Components/PostListContainer';
+import PostContainer from './Components/PostContainer';
+import store from './redux/store';
 
-class App extends Component {
-  // Initialize state
-  state = { passwords: [] };
+class App extends PureComponent {
+  // state = { posts: [] };
 
-  // Fetch passwords after first mount
-  componentDidMount() {
-    this.getPasswords();
+  // componentDidMount() {
+  //   this.getPost('20170226');
+  // }
+
+  _redirectToHome() {
+    return <Redirect to="/" />;
   }
 
-  getPasswords = () => {
-    // Get the passwords and store them in state
-    fetch('/api/passwords')
-      .then(res => res.json())
-      .then(passwords => this.setState({ passwords }));
-  };
-
   render() {
-    const { passwords } = this.state;
-    return <div>Hello {passwords}</div>;
+    return (
+      <Provider store={store}>
+        <MuiThemeProvider>
+          <Router>
+            <div>
+              <Header />
+
+              {/* content */}
+              <Switch>
+                <Route exact path="/" component={PostListContainer} />
+                <Route path="/posts/:id" component={PostContainer} />
+
+                {/* catch-all redirects to home */}
+                <Route render={this._redirectToHome} />
+              </Switch>
+            </div>
+          </Router>
+        </MuiThemeProvider>
+      </Provider>
+    );
   }
 }
 
